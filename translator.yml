@@ -1,0 +1,45 @@
+English:
+  navigator: "Select a page"
+  homepage:
+    name: "Homepage"
+    sidebar-title: "## Homepage \U0001F431"
+    title: "Pupvotes \U0001F436"
+  dataset:
+    name: "Dataset"
+    sidebar-title: "## Options"
+    title: "Dataset"
+  caption:
+    name: "Caption"
+    sidebar-title: "## Options"
+    title: "Caption Analysis"
+    section1-title: Caption Length
+    section2-title: Subject Analysis
+    section3-title: Sample Captions
+    section4-title: Caption Embeddings
+    section1-text: Unfortunately, redditors do not usually use verbose captions when posting their photos.  This is because the main piece of information inside a reddit post is the picture of the animal.  Text only serves to help provide context to the image.  For dogs, it seems that the more context the better.  Cat posts get away with much less text but are punished for too long of a caption.  The sweet spot for both appears to be ~10 words long.
+    section2-text: As we've seen, posts do not include a lot of text.  This provides a challenge when attempting to group captions together.  For example, christmas posts will likely have either "Merry Christmas" or "Happy Holidays" or "Santa Claus" but will rarely have more than one.  Therefore, any form of unsupervised approach will struggle to correctly group captions.  I have a more in depth analysis on my github.  In order to work around this problem, I've come up with a custom feature engineering approach that applies labels based on my experience digging through the data.  These new labels cover ~30% of the data but contains semantically relevant information that captures the intent behind the post caption. 
+    section3-text: Nothing yet
+    section4-text: Unfortunately, redditors do not usually use verbose captions when posting their photos.
+
+Italiano:
+  navigator: "Sceglia una pagina"
+  homepage:
+    name: "Pagina Iniziale"
+    sidebar-title: "## Pagina Iniziale \U0001F431"
+    title: "Pupvotes \U0001F436"
+  dataset:
+    name: "Set di Dati"
+    sidebar-title: "## Opzioni"
+    title: "Set di Dati"
+  caption:
+    name: "Didascalia"
+    sidebar-title: "## Opzioni"
+    title: "Analisi della Didascalia"
+    section1-title: Lunghezza delle Didascalie
+    section2-title: Analisisi dei Soggetti
+    section3-title: Didascalie di Esempio
+    section4-title: Vettore di Didascalia
+    section1-text: Niente
+    section2-text: Niente
+    section3-text: Niente
+    section4-text: Niente
