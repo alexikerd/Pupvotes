@@ -10,12 +10,11 @@ from pages import Home,Dataset,Caption
 # @st.cache
 def load_translator():
 
-    with open("translator.yml","r") as f:
+    with open("translator.yml","rb") as f:
 
         return yaml.load(f,Loader=yaml.FullLoader)
 
 translator = load_translator()
-
 
 
 
@@ -33,15 +32,14 @@ pages = {
     "caption": Caption,
 }
 
-
-def grab_page(selected_page,translation,language):
-    return selected_page(translation,language)
-
-
-
-selected_page = st.sidebar.selectbox(translator[language]["navigator"], pages.keys(), format_func=lambda x:translator[language][x]["name"])
+@st.cache(hash_funcs={dict: lambda _: None})
+def grab_page(selected_page,translation):
+    return {"page":selected_page(translation)}
 
 
-current_page = grab_page(pages[selected_page],translator,language)
-current_page.render_frame()
+selected_page = st.sidebar.selectbox(translator["navigator"][language], pages.keys(), format_func=lambda x:translator[x][language]["name"])
+
+
+current_page = grab_page(pages[selected_page],translator)["page"]
+current_page.render_frame(language)
 

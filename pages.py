@@ -6,44 +6,48 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
 
+import pickle
 
+from sentence_transformers import SentenceTransformer
+
+def header(text):
+    st.markdown(f'<p style="background-color:#0066cc;color:#33ff33;font-size:24px;border-radius:2%;">{text}</p>', unsafe_allow_html=True)
 
 
 class Page:
 
-    def __init__(self,translation):
+    def __init__(self,content):
 
-        self.translation = translation
+        self.content = content
     
-    def render_frame(self):
 
+    def render_frame(self,lang):
 
-        st.markdown("<h1 style='text-align: center;'>" + self.translation["title"] + "</h1>", unsafe_allow_html=True)
-        st.sidebar.markdown(self.translation["sidebar-title"])
+        st.markdown("<h1 style='text-align: center;'>" + self.content[lang]["title"] + "</h1>", unsafe_allow_html=True)
+        st.sidebar.markdown(self.content[lang]["sidebar-title"])
         st.write("-"*50)
 
 
-        self.render_content()
+        self.render_content(lang)
 
-    def render_content(self):
+    def render_content(self,lang):
 
         pass
 
 
 
 
+
 class Home(Page):
 
-    def __init__(self,translation,language):
-        self.lang = language
-        super().__init__(translation[self.lang]["homepage"]) 
+    def __init__(self,translation):
+        super().__init__(translation["homepage"]) 
 
 
 class Dataset(Page):
 
-    def __init__(self,translation,language):
-        self.lang = language
-        super().__init__(translation[self.lang]["dataset"]) 
+    def __init__(self,translation):
+        super().__init__(translation["dataset"]) 
 
 
 
@@ -54,9 +58,8 @@ class Dataset(Page):
 
 class Caption(Page):
 
-    def __init__(self,translation,language):
-        self.lang = language
-        super().__init__(translation[self.lang]["caption"]) 
+    def __init__(self,translation):
+        super().__init__(translation["caption"]) 
 
         self.df = pd.read_csv("data.csv",parse_dates=["posted","scraped"])
         self.df["weekday"] = self.df.posted.dt.day_name()
@@ -86,85 +89,91 @@ class Caption(Page):
             return "other"
 
         self.df["subject"] = self.df.title.apply(label)
-
-        self.dictionary = {"other":"altro"
-        ,"greeting":"saluto"
-        ,"sun":"sole"
-        ,"sleep":"sonno"
-        ,"snow":"neve"
-        ,"death/injury":"morte/danno"
-        ,"attributes":"caratteristiche"
-        ,"new":"nuovo"
-        ,"birthday":"compleanno"
-        ,"walk":"passeggiata"
-        ,"cute":"carino"
-        ,"playful":"giocoso"
-        ,"holiday":"vacanza"
-        }
-
-        self.df["soggetto"] = self.df.subject.apply(lambda x:self.dictionary[x])
+        self.embeddor = SentenceTransformer('all-MiniLM-L6-v2')
+        
+        with open("models/sentemb.pkl","rb") as f:
+            self.model = pickle.load(f)
 
 
-    def render_content(self):
+    def render_content(self,lang):
 
+        translation = self.content[lang]
         
         st1,st2 = st.columns(2)
 
         st2.markdown(f"""
-        ### {self.translation["section1-title"]}
+        ### {translation["section1-title"]}
         
-        {self.translation["section1-text"]}
+        {translation["section1-text"]}
 
         """)
         
-        cat_filter = st.sidebar.selectbox("Category", ["all","cats","dogs"], format_func=lambda x:x.title()) 
+        cat_filter = st.sidebar.selectbox(translation["sidebar-filter1-text"], translation["sidebar-filter1-options"].keys(), format_func=lambda x:translation["sidebar-filter1-options"][x]) 
+        sub_filter = st.sidebar.selectbox(translation["sidebar-filter2-text"], translation["sidebar-filter2-options"].keys(), format_func=lambda x:translation["sidebar-filter2-options"][x])
 
 
-        if self.lang=="English":
-            subject_filter = st.sidebar.selectbox("Subject",self.dictionary.keys(), format_func=lambda x:x.title())       
-        else:
-            subject_filter = st.sidebar.selectbox("Soggetto",self.dictionary.values(), format_func=lambda x:x.title()) 
-
-
-
-        st1.image(f'appdata/captionlength_count_{self.lang.lower()}_{cat_filter}.png')
-        st1.image(f'appdata/captionlength_target_{self.lang.lower()}_{cat_filter}.png')
+        st1.image(f'appdata/captionlength_count_{lang.lower()}_{cat_filter}.png')
+        st1.image(f'appdata/captionlength_target_{lang.lower()}_{cat_filter}.png')
 
         st.write("-"*50)
         st1,st2 = st.columns(2)
 
         st1.markdown(f"""
-        ### {self.translation["section2-title"]}
+        ### {translation["section2-title"]}
 
-        {self.translation["section2-text"]}
+        {translation["section2-text"]}
 
         """)
 
-        st2.image(f'appdata/captionsubject_count_{self.lang.lower()}_{cat_filter}.png')
-        st2.image(f'appdata/captionsubject_target_{self.lang.lower()}_{cat_filter}.png')
+        st2.image(f'appdata/captionsubject_count_{lang.lower()}_{cat_filter}.png')
+        st2.image(f'appdata/captionsubject_target_{lang.lower()}_{cat_filter}.png')
 
 
         st.write("-"*50)
         st1,st2 = st.columns(2)
 
         st1.markdown(f"""
-        ### {self.translation["section3-title"]}
+        ### {translation["section3-title"]}
         """)
+
+        st1.image(f'appdata/wordcloud_{cat_filter}_{sub_filter.replace("/","-")}.png')
+
         st2.markdown(f"""
-        #### Description
+        ### {translation["sidebar-filter2-options"][sub_filter]}
         
-        **{subject_filter.title()}:** Add description of subjects here
+        **{translation["section3-text1"]}:** {translation[f'section3-description-{sub_filter}']}
+
+        #### {translation["section3-text2"]}
 
         """)
-        if st.sidebar.button("Generate Sample"):
+        if st.sidebar.button(translation["sidebar-filter3-text"]):
             
-            if self.lang=="English":
-                for i,s in enumerate(self.df.loc[self.df.subject==subject_filter,"title"].sample(5).tolist()):
-                    st1.markdown(f'**{i+1}:** {s}')
-
+            if cat_filter=="all":
+                for i,s in enumerate(self.df.loc[(self.df.subject==sub_filter),"title"].sample(5).tolist()):
+                        st2.markdown(f'**{i+1}:** {s}')
             else:
-                for i,s in enumerate(self.df.loc[self.df.soggetto==subject_filter,"title"].sample(5).tolist()):
-                    st1.markdown(f'**{i+1}:** {s}')
+                for i,s in enumerate(self.df.loc[(self.df.subject==sub_filter)&(self.df.category==cat_filter),"title"].sample(5).tolist()):
+                        st2.markdown(f'**{i+1}:** {s}')
+
+        else:
+
+            if cat_filter=="all":
+                for i,s in enumerate(self.df.loc[(self.df.subject==sub_filter),"title"].sample(5).tolist()):
+                        st2.markdown(f'**{i+1}:** {s}')
+            else:
+                for i,s in enumerate(self.df.loc[(self.df.subject==sub_filter)&(self.df.category==cat_filter),"title"].sample(5).tolist()):
+                        st2.markdown(f'**{i+1}:** {s}')
+
+
+        sampletext = st.sidebar.text_input(translation["sidebar-filter4-text"],"He is my snuggle partner")
+
+        st.write("-"*50)
+
+        st1,st2 = st.columns(2)
+
+        st1.markdown(f"""
+        ### {translation["section4-title"]}
+        """)        
 
 
 
@@ -172,9 +181,19 @@ class Caption(Page):
         st1,st2 = st.columns(2)
 
         st2.markdown(f"""
-        ### {self.translation["section4-title"]}
+        ### {translation["section5-title"]}
 
-        {self.translation["section4-text"]}
+        {translation["section5-text"]}
 
         """)
+
+        st1.dataframe(self.df.iloc[self.get_knn(sampletext)][["title"]].rename(columns={"title":"Captions"}))
+
+
+
+    def get_knn(self,sentence):
+
+        distances,indices = self.model.kneighbors(self.embeddor.encode([sentence]))
+
+        return list(indices)[0]
 
