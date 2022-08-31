@@ -2,9 +2,9 @@ import yaml
 import streamlit as st
 from pages import Home,Dataset,Caption
 
-# st.markdown("# Pupvotes \U0001F436")
-# st.sidebar.markdown("# Homepage \U0001F431")
 
+if "index" not in st.session_state:
+    st.session_state["index"] = "homepage"
 
 
 # @st.cache
@@ -15,7 +15,6 @@ def load_translator():
         return yaml.load(f,Loader=yaml.FullLoader)
 
 translator = load_translator()
-
 
 
 
@@ -32,14 +31,20 @@ pages = {
     "caption": Caption,
 }
 
-@st.cache(hash_funcs={dict: lambda _: None})
+
+
+
+# @st.cache(hash_funcs={dict: lambda _: None})
 def grab_page(selected_page,translation):
     return {"page":selected_page(translation)}
 
 
-selected_page = st.sidebar.selectbox(translator["navigator"][language], pages.keys(), format_func=lambda x:translator[x][language]["name"])
+
+index_number = list(pages.keys()).index(st.session_state["index"])
+st.session_state["index"] = st.sidebar.selectbox(translator["navigator"][language], pages.keys(), format_func=lambda x:translator[x][language]["name"],index=index_number)
 
 
-current_page = grab_page(pages[selected_page],translator)["page"]
+
+current_page = grab_page(pages[st.session_state["index"]],translator)["page"]
 current_page.render_frame(language)
 
