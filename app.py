@@ -3,25 +3,29 @@ import streamlit as st
 from pages import Home,Dataset,Caption
 
 
-if "index" not in st.session_state:
-    st.session_state["index"] = "homepage"
+if "page" not in st.session_state:
+    st.session_state["page"] = "homepage"
+
 
 
 # @st.cache
-def load_translator():
+def load_content():
 
-    with open("translator.yml","rb") as f:
+    with open("content.yml","rb") as f:
 
         return yaml.load(f,Loader=yaml.FullLoader)
 
-translator = load_translator()
+content = load_content()
 
 
+def translate():
+    if st.session_state.new_language:
+        st.session_state["lang"] = st.session_state.new_language
 
-def choose_language():
-    return st.sidebar.selectbox("Choose a language / Sceglia una lingua", ["English","Italiano"])
 
-language = choose_language()
+languages = ["English","Italiano"]
+language = st.sidebar.selectbox(content[st.session_state["lang"]]["translate"],options=languages,on_change=translate,key="new_language")
+
 
 
 
@@ -35,16 +39,16 @@ pages = {
 
 
 # @st.cache(hash_funcs={dict: lambda _: None})
-def grab_page(selected_page,translation):
-    return {"page":selected_page(translation)}
+def grab_page(selected_page,translation,language):
+    return {"f1":selected_page(translation,language)}
 
 
 
-index_number = list(pages.keys()).index(st.session_state["index"])
-st.session_state["index"] = st.sidebar.selectbox(translator["navigator"][language], pages.keys(), format_func=lambda x:translator[x][language]["name"],index=index_number)
+index_number = list(pages.keys()).index(st.session_state["page"])
+st.session_state["page"] = st.sidebar.selectbox(content[st.session_state["lang"]]["navigator"], pages.keys(), format_func=lambda x:content[st.session_state["lang"]][x]["name"],index=index_number)
 
 
 
-current_page = grab_page(pages[st.session_state["index"]],translator)["page"]
-current_page.render_frame(language)
+current_page = grab_page(pages[st.session_state["page"]],content,st.session_state["lang"])["f1"]
+current_page.render_frame()
 

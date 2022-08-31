@@ -16,21 +16,21 @@ def header(text):
 
 class Page:
 
-    def __init__(self,content):
+    def __init__(self,translation):
 
-        self.content = content
+        self.translation = translation
     
 
-    def render_frame(self,lang):
+    def render_frame(self):
 
-        st.markdown("<h1 style='text-align: center;'>" + self.content[lang]["title"] + "</h1>", unsafe_allow_html=True)
-        st.sidebar.markdown(self.content[lang]["sidebar-title"])
+        st.markdown("<h1 style='text-align: center;'>" + self.translation["title"] + "</h1>", unsafe_allow_html=True)
+        st.sidebar.markdown(self.translation["sidebar-title"])
         st.write("-"*50)
 
 
-        self.render_content(lang)
+        self.render_content()
 
-    def render_content(self,lang):
+    def render_content(self):
 
         pass
 
@@ -40,14 +40,16 @@ class Page:
 
 class Home(Page):
 
-    def __init__(self,translation):
-        super().__init__(translation["homepage"]) 
+    def __init__(self,content,language):
+        self.lang = language
+        super().__init__(content[self.lang]["homepage"]) 
 
 
 class Dataset(Page):
 
-    def __init__(self,translation):
-        super().__init__(translation["dataset"]) 
+    def __init__(self,content,language):
+        self.lang = language
+        super().__init__(content[self.lang]["dataset"]) 
 
 
 
@@ -58,8 +60,9 @@ class Dataset(Page):
 
 class Caption(Page):
 
-    def __init__(self,translation):
-        super().__init__(translation["caption"]) 
+    def __init__(self,content,language):
+        self.lang = language
+        super().__init__(content[self.lang]["caption"]) 
 
         self.df = pd.read_csv("data.csv",parse_dates=["posted","scraped"])
         self.df["weekday"] = self.df.posted.dt.day_name()
@@ -95,58 +98,56 @@ class Caption(Page):
             self.model = pickle.load(f)
 
 
-    def render_content(self,lang):
+    def render_content(self):
 
-        translation = self.content[lang]
-        
         st1,st2 = st.columns(2)
 
         st2.markdown(f"""
-        ### {translation["section1-title"]}
+        ### {self.translation["section1-title"]}
         
-        {translation["section1-text"]}
+        {self.translation["section1-text"]}
 
         """)
         
-        cat_filter = st.sidebar.selectbox(translation["sidebar-filter1-text"], translation["sidebar-filter1-options"].keys(), format_func=lambda x:translation["sidebar-filter1-options"][x]) 
-        sub_filter = st.sidebar.selectbox(translation["sidebar-filter2-text"], translation["sidebar-filter2-options"].keys(), format_func=lambda x:translation["sidebar-filter2-options"][x])
+        cat_filter = st.sidebar.selectbox(self.translation["sidebar-filter1-text"], self.translation["sidebar-filter1-options"].keys(), format_func=lambda x:self.translation["sidebar-filter1-options"][x]) 
+        sub_filter = st.sidebar.selectbox(self.translation["sidebar-filter2-text"], self.translation["sidebar-filter2-options"].keys(), format_func=lambda x:self.translation["sidebar-filter2-options"][x])
 
 
-        st1.image(f'appdata/captionlength_count_{lang.lower()}_{cat_filter}.png')
-        st1.image(f'appdata/captionlength_target_{lang.lower()}_{cat_filter}.png')
+        st1.image(f'appdata/captionlength_count_{self.lang.lower()}_{cat_filter}.png')
+        st1.image(f'appdata/captionlength_target_{self.lang.lower()}_{cat_filter}.png')
 
         st.write("-"*50)
         st1,st2 = st.columns(2)
 
         st1.markdown(f"""
-        ### {translation["section2-title"]}
+        ### {self.translation["section2-title"]}
 
-        {translation["section2-text"]}
+        {self.translation["section2-text"]}
 
         """)
 
-        st2.image(f'appdata/captionsubject_count_{lang.lower()}_{cat_filter}.png')
-        st2.image(f'appdata/captionsubject_target_{lang.lower()}_{cat_filter}.png')
+        st2.image(f'appdata/captionsubject_count_{self.lang.lower()}_{cat_filter}.png')
+        st2.image(f'appdata/captionsubject_target_{self.lang.lower()}_{cat_filter}.png')
 
 
         st.write("-"*50)
         st1,st2 = st.columns(2)
 
         st1.markdown(f"""
-        ### {translation["section3-title"]}
+        ### {self.translation["section3-title"]}
         """)
 
         st1.image(f'appdata/wordcloud_{cat_filter}_{sub_filter.replace("/","-")}.png')
 
         st2.markdown(f"""
-        ### {translation["sidebar-filter2-options"][sub_filter]}
+        ### {self.translation["sidebar-filter2-options"][sub_filter]}
         
-        **{translation["section3-text1"]}:** {translation[f'section3-description-{sub_filter}']}
+        **{self.translation["section3-text1"]}:** {self.translation[f'section3-description-{sub_filter}']}
 
-        #### {translation["section3-text2"]}
+        #### {self.translation["section3-text2"]}
 
         """)
-        if st.sidebar.button(translation["sidebar-filter3-text"]):
+        if st.sidebar.button(self.translation["sidebar-filter3-text"]):
             
             if cat_filter=="all":
                 for i,s in enumerate(self.df.loc[(self.df.subject==sub_filter),"title"].sample(5).tolist()):
@@ -165,14 +166,14 @@ class Caption(Page):
                         st2.markdown(f'**{i+1}:** {s}')
 
 
-        sampletext = st.sidebar.text_input(translation["sidebar-filter4-text"],"He is my snuggle partner")
+        sampletext = st.sidebar.text_input(self.translation["sidebar-filter4-text"],"He is my snuggle partner")
 
         st.write("-"*50)
 
         st1,st2 = st.columns(2)
 
         st1.markdown(f"""
-        ### {translation["section4-title"]}
+        ### {self.translation["section4-title"]}
         """)        
 
 
@@ -181,9 +182,9 @@ class Caption(Page):
         st1,st2 = st.columns(2)
 
         st2.markdown(f"""
-        ### {translation["section5-title"]}
+        ### {self.translation["section5-title"]}
 
-        {translation["section5-text"]}
+        {self.translation["section5-text"]}
 
         """)
 
