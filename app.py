@@ -1,10 +1,18 @@
 import yaml
 import streamlit as st
 from pages import Home,Dataset,Caption
+from util import translate, flip_page
 
 
 if "page" not in st.session_state:
     st.session_state["page"] = "homepage"
+
+if "lang" not in st.session_state:
+    st.session_state["lang"] = "English"
+
+if "filter1" not in st.session_state:
+    st.session_state["filter1"] = "all"
+    st.session_state["filter2"] = "attributes"
 
 
 
@@ -18,13 +26,11 @@ def load_content():
 content = load_content()
 
 
-def translate():
-    if st.session_state.new_language:
-        st.session_state["lang"] = st.session_state.new_language
 
 
 languages = ["English","Italiano"]
-language = st.sidebar.selectbox(content[st.session_state["lang"]]["translate"],options=languages,on_change=translate,key="new_language")
+lang_index = languages.index(st.session_state["lang"])
+st.session_state["lang"] = st.sidebar.selectbox(content["translate"][st.session_state["lang"]],options=languages,on_change=translate,key="new_language",index=lang_index)
 
 
 
@@ -38,17 +44,20 @@ pages = {
 
 
 
-# @st.cache(hash_funcs={dict: lambda _: None})
-def grab_page(selected_page,translation,language):
-    return {"f1":selected_page(translation,language)}
+@st.cache(hash_funcs={dict: lambda _: None})
+def grab_page(selected_page,translation):
+    return {"f1":selected_page(translation)}
 
 
 
-index_number = list(pages.keys()).index(st.session_state["page"])
-st.session_state["page"] = st.sidebar.selectbox(content[st.session_state["lang"]]["navigator"], pages.keys(), format_func=lambda x:content[st.session_state["lang"]][x]["name"],index=index_number)
+
+page_index = list(pages.keys()).index(st.session_state["page"])
+selected_page = st.sidebar.selectbox(content["navigator"][st.session_state["lang"]], pages.keys(), format_func=lambda x:content[x][st.session_state["lang"]]["name"],on_change=flip_page,key="new_page",index=page_index)
 
 
 
-current_page = grab_page(pages[st.session_state["page"]],content,st.session_state["lang"])["f1"]
-current_page.render_frame()
+
+
+current_page = grab_page(pages[selected_page],content)["f1"]
+current_page.render_frame(st.session_state["lang"])
 

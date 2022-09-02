@@ -1,23 +1,36 @@
-English:
-  navigator: "Select a page"
-  translate: "Choose a language"
-  homepage:
+navigator:
+  English: "Select a page"
+  Italiano: "Sceglia una pagina"
+translate:
+  English: "Choose a language"
+  Italiano: "Sceglia una lingua"
+homepage:
+  English:
     name: "Homepage"
     sidebar-title: "## Homepage \U0001F431"
     title: "Pupvotes \U0001F436"
-  dataset:
+  Italiano: 
+    name: "Pagina Iniziale"
+    sidebar-title: "## Pagina Iniziale \U0001F431"
+    title: "Pupvotes \U0001F436"
+dataset:
+  English:
     name: "Dataset"
     sidebar-title: "## Options"
     title: "Dataset"
-  caption:
+  Italiano:
+      name: "Set di Dati"
+      sidebar-title: "## Opzioni"
+      title: "Set di Dati"
+caption:
+  English:
     name: "Caption"
     sidebar-title: "## Options"
     title: "Caption Analysis"
     section1-title: Caption Length
     section2-title: Subject Analysis
     section3-title: "Wordcloud by Subject"
-    section4-title: N/A
-    section5-title: Caption Embeddings
+    section4-title: Caption Embeddings
     section1-text: Unfortunately, redditors do not usually use verbose captions when posting their photos.  This is because the main piece of information inside a reddit post is the picture of the animal.  Text only serves to help provide context to the image.  For dogs, it seems that the more context the better.  Cat posts get away with much less text but are punished for too long of a caption.  The sweet spot for both appears to be ~10 words long.
     section2-text: As we've seen, posts do not include a lot of text.  This provides a challenge when attempting to group captions together.  For example, christmas posts will likely have either "Merry Christmas" or "Happy Holidays" or "Santa Claus" but will rarely have more than one.  Therefore, any form of unsupervised approach will struggle to correctly group captions.  I have a more in depth analysis on my github.  In order to work around this problem, I've come up with a custom feature engineering approach that applies labels based on my experience digging through the data.  These new labels cover ~30% of the data but contains semantically relevant information that captures the intent behind the post caption. 
     section3-text1: Description
@@ -29,42 +42,25 @@ English:
     section3-description-greeting: The redditor is addressing the audience with a greeting.
     section3-description-holiday: The post is celebrating a holiday.
     section3-description-new: The owner has recently adopted or rescued a new pet.
-    section3-description-other: There is not a clear enough pattern to group these remaining posts.
     section3-description-playful: The caption is highlighting how playful or energetic the pet is.
     section3-description-sleep: The animal is either tired, cuddling, or napping.
     section3-description-snow: The post is emphasizing the snow.
     section3-description-sun: The post is emphasizing the warm sun.
     section3-description-walk: The redditor is talking about taking their animal on a walk.
-    section4-text: N/A
-    section5-text: Hopefully, the past section has demonstrated that the subjects capture significant meaning.  However, 70% of the data is not being addressed by the custom subject.  On top of that, we are not able to semantically separate posts within a given subject.  Therefore, I've been able to come up with sentence embeddings to help the model out. Feel free to test out the embeddings by entering in your own caption and see which captions are the closest. 
+    section4-text: Hopefully the previous section has demonstrated that the subject matter captures relevant information from the caption.  Unfortunately, this does not account for 70% of captions.  In order to account for this, we can create sentence embeddings of the caption using BERT.  Feel free to explore which captions are closest to each other.  
     sidebar-filter1-text: Animal
     sidebar-filter1-options: {"all":"All","cats":"Cats","dogs":"Dogs"}
     sidebar-filter2-text: Subject
-    sidebar-filter2-options: {'attributes':'Attributes','birthday':'Birthday','cute':'Cute','death/injury': 'Death/Injury','greeting':'Greeting','holiday':'Holiday','new':'New','other':'Other','playful':'Playful','sleep':'Sleep','snow':'Snow','sun':'Sun','walk':'Walk'}
+    sidebar-filter2-options: {'attributes':'Attributes','birthday':'Birthday','cute':'Cute','death/injury': 'Death/Injury','greeting':'Greeting','holiday':'Holiday','new':'New','playful':'Playful','sleep':'Sleep','snow':'Snow','sun':'Sun','walk':'Walk'}
     sidebar-filter3-text: Generate Examples
-    sidebar-filter4-text: Write Sample Caption Here
-
-
-Italiano: 
-  navigator: "Sceglia una pagina"
-  translate: "Sceglia una lingua"
-  homepage:
-    name: "Pagina Iniziale"
-    sidebar-title: "## Pagina Iniziale \U0001F431"
-    title: "Pupvotes \U0001F436"
-  dataset:
-      name: "Set di Dati"
-      sidebar-title: "## Opzioni"
-      title: "Set di Dati"
-  caption:
+  Italiano:
     name: "Didascalia"
     sidebar-title: "## Opzioni"
     title: "Analisi della Didascalia"
     section1-title: Lunghezza delle Didascalie
     section2-title: Analisisi dei Soggetti
     section3-title: Nuvola di Parole per Soggetto
-    section4-title: N/A
-    section5-title: Vettore di Didascalia
+    section4-title: Vettore di Didascalia
     section1-text: Niente
     section2-text: Niente
     section3-text1: Descrizione
@@ -76,20 +72,18 @@ Italiano:
     section3-description-greeting: Il redditor sta salutando.
     section3-description-holiday: Sta festeggiando una vacanza.
     section3-description-new: La famiglia ha adottato l'animale recentemente.
-    section3-description-other: "Non c'è un soggetto chiaro con questi posti."
     section3-description-playful: La didascalia descrive l'energia dell'animale.
     section3-description-sleep: L'animale ha sonno ed sta dormendo.
     section3-description-snow: Sta parlando della neve.
     section3-description-sun: Sta parlando del sole.
     section3-description-walk: Il redditor fa una passeggiata con l'animale.
-    section4-text: N/A
-    section5-text: "Mi dispiace Italiani ma non è possibile tradurre tutti posti a Italiano.  In questa sezione, mostro che è possible a convertire un posto a un vettore.  Puoi scrivere un posto (in Inglese) e vedrai i posti nel set dei dati che sono più simile.  Così il modello puo capire tutti i posti.   Se non parli Inglese, mi dispiace."
+    section4-text: "La sezione scorsa ha mostrato che il soggetto è utile.  Sfortunatamente solo abbiamo un soggetto per 70% delle didascalie.  Possiamo convertire una frase a un vettore con BERT.  Prova a trovare esempi dentro il grafo"
     sidebar-filter1-text: Animale
     sidebar-filter1-options: {"all":"Tutti Due","cats":"Gatti","dogs":"Cani"}
     sidebar-filter2-text: Soggetto
-    sidebar-filter2-options: {'attributes':'Caratteristiche','birthday':'Compleanno','cute':'Carino','death/injury': 'Morte/Danno','greeting':'Saluto','holiday':'Vacanza','new':'Nuovo','other':'Altro','playful':'Giocoso','sleep':'Sonno','snow':'Neve','sun':'Sole','walk':'Passeggiata'}
+    sidebar-filter2-options: {'attributes':'Caratteristiche','birthday':'Compleanno','cute':'Carino','death/injury': 'Morte/Danno','greeting':'Saluto','holiday':'Vacanza','new':'Nuovo','playful':'Giocoso','sleep':'Sonno','snow':'Neve','sun':'Sole','walk':'Passeggiata'}
     sidebar-filter3-text: Mostra Esempi
-    sidebar-filter4-text: Scrivi Didascalia di Esempio Qui
+
 
 
 
