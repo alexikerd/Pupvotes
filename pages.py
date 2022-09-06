@@ -8,7 +8,7 @@ import plotly.express as px
 
 import pickle
 
-from util import apply_filter1, apply_filter2
+from util import apply_filter1, apply_filter2, apply_filter3a, apply_filter3b
 
 def header(text):
     st.markdown(f'<p style="background-color:#0066cc;color:#33ff33;font-size:24px;border-radius:2%;">{text}</p>', unsafe_allow_html=True)
@@ -53,6 +53,13 @@ class Dataset(Page):
 
 
 
+class TimeSeries(Page):
+
+    def __init__(self,content):
+        super().__init__(content["time"]) 
+
+
+
 
 
 
@@ -67,7 +74,7 @@ class Caption(Page):
 
         self.fig = px.scatter(self.df.rename(columns=str.title),x="Dim 1",y="Dim 2", custom_data=["Subject","Title","Upvotes"],color="Subject", labels={'color': 'Subject'})
         self.fig.update_traces(hovertemplate="<br>".join(["Subject: %{customdata[0]}","Title: %{customdata[1]}","Upvotes %{customdata[2]}"]))
-        self.fig.update_layout(title_text='Subject Embeddings', title_x=0.5)    
+        
 
 
     def render_content(self,translation,lang):
@@ -85,8 +92,8 @@ class Caption(Page):
         index2 = list(translation["sidebar-filter2-options"].keys()).index(st.session_state["filter2"])
         
         st.session_state["filter1"] = st.sidebar.selectbox(translation["sidebar-filter1-text"], translation["sidebar-filter1-options"].keys(), format_func=lambda x:translation["sidebar-filter1-options"][x],on_change=apply_filter1,key="new_filter1",index=index1) 
-        st.session_state["filter2"] = st.sidebar.selectbox(translation["sidebar-filter2-text"], translation["sidebar-filter2-options"].keys(), format_func=lambda x:translation["sidebar-filter2-options"][x],on_change=apply_filter1,key="new_filter1",index=index2)
-        # st.write(index1)
+        st.session_state["filter2"] = st.sidebar.selectbox(translation["sidebar-filter2-text"], translation["sidebar-filter2-options"].keys(), format_func=lambda x:translation["sidebar-filter2-options"][x],on_change=apply_filter2,key="new_filter2",index=index2)
+
 
         st1.image(f'appdata/captionlength_count_{lang.lower()}_{st.session_state["filter1"]}.png')
         st1.image(f'appdata/captionlength_target_{lang.lower()}_{st.session_state["filter1"]}.png')
@@ -151,6 +158,51 @@ class Caption(Page):
 
         """)
 
+        self.fig.update_layout(title_text=translation["section4-plot-title"], title_x=0.5)
 
         st2.plotly_chart(self.fig,use_container_width=True)
 
+
+
+
+class Subreddit(Page):
+
+    def __init__(self,content):
+        super().__init__(content["subreddit"]) 
+
+        self.df = pd.read_csv("appdata/sub.csv")
+
+
+    def render_content(self,translation,lang):
+
+
+        index1 = list(translation["sidebar-filter1-options"].keys()).index(st.session_state["filter1"])        
+        st.session_state["filter1"] = st.sidebar.selectbox(translation["sidebar-filter1-text"], translation["sidebar-filter1-options"].keys(), format_func=lambda x:translation["sidebar-filter1-options"][x],on_change=apply_filter1,key="new_filter1",index=index1) 
+
+
+        index3a = list(translation["sidebar-filter3-options"].keys()).index(st.session_state["filter3a"])
+        st.session_state["filter3a"] = st.sidebar.selectbox(translation["sidebar-filter3-texta"], translation["sidebar-filter3-options"].keys(), format_func=lambda x:translation["sidebar-filter3-options"][x],on_change=apply_filter3a,key="new_filter3a",index=index3a)
+
+        index3b = list(translation["sidebar-filter3-options"].keys()).index(st.session_state["filter3b"])
+
+        yoptions = {k:v for k,v in translation["sidebar-filter3-options"].items() if k != st.session_state["filter3a"]}
+
+        try:
+            index3b = list(yoptions.keys()).index(st.session_state["filter3b"])
+        except:
+            index3b = 0
+
+
+        st.session_state["filter3b"] = st.sidebar.selectbox(translation["sidebar-filter3-textb"], yoptions.keys(), format_func=lambda x:yoptions[x],on_change=apply_filter3b,key="new_filter3b",index=index3b)
+
+        if st.session_state["filter1"]=="all":
+            self.fig = px.scatter(data_frame=self.df.sort_values("category"),x=st.session_state["filter3a"],y=st.session_state["filter3b"],color="category",hover_name="subreddit",color_discrete_sequence=["red","blue"],labels=translation["sidebar-filter3-options"])
+        else:
+            self.fig = px.scatter(data_frame=self.df[self.df.category==st.session_state["filter1"]],x=st.session_state["filter3a"],y=st.session_state["filter3b"],hover_name="subreddit",color="category",color_discrete_sequence=["red" if st.session_state["filter1"]=="cats" else "blue"],labels=translation["sidebar-filter3-options"])
+
+        self.fig.update_layout(legend_title="Category",legend_title_font_size=20)
+        self.fig.update_xaxes(range=[self.df[st.session_state["filter3a"]].min(),self.df[st.session_state["filter3a"]].max()])
+        self.fig.update_yaxes(range=[self.df[st.session_state["filter3b"]].min(),self.df[st.session_state["filter3b"]].max()])
+
+        
+        st.plotly_chart(self.fig,use_container_width=True)

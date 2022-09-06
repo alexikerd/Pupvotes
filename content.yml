@@ -22,6 +22,15 @@ dataset:
       name: "Set di Dati"
       sidebar-title: "## Opzioni"
       title: "Set di Dati"
+time:
+  English:
+    name: "Time Series"
+    sidebar-title: "## Homepage \U0001F431"
+    title: "Time Series"
+  Italiano: 
+    name: "Serie Temporali"
+    sidebar-title: "## Pagina Iniziale \U0001F431"
+    title: "Serie Temporali"
 caption:
   English:
     name: "Caption"
@@ -48,6 +57,7 @@ caption:
     section3-description-sun: The post is emphasizing the warm sun.
     section3-description-walk: The redditor is talking about taking their animal on a walk.
     section4-text: Hopefully the previous section has demonstrated that the subject matter captures relevant information from the caption.  Unfortunately, this does not account for 70% of captions.  In order to account for this, we can create sentence embeddings of the caption using BERT.  Feel free to explore which captions are closest to each other.  
+    section4-plot-title: Caption Embedding
     sidebar-filter1-text: Animal
     sidebar-filter1-options: {"all":"All","cats":"Cats","dogs":"Dogs"}
     sidebar-filter2-text: Subject
@@ -78,11 +88,35 @@ caption:
     section3-description-sun: Sta parlando del sole.
     section3-description-walk: Il redditor fa una passeggiata con l'animale.
     section4-text: "La sezione scorsa ha mostrato che il soggetto è utile.  Sfortunatamente solo abbiamo un soggetto per 70% delle didascalie.  Possiamo convertire una frase a un vettore con BERT.  Prova a trovare esempi dentro il grafo"
+    section4-plot-title: Vettori di Didascalia  
     sidebar-filter1-text: Animale
     sidebar-filter1-options: {"all":"Tutti Due","cats":"Gatti","dogs":"Cani"}
     sidebar-filter2-text: Soggetto
     sidebar-filter2-options: {'attributes':'Caratteristiche','birthday':'Compleanno','cute':'Carino','death/injury': 'Morte/Danno','greeting':'Saluto','holiday':'Vacanza','new':'Nuovo','playful':'Giocoso','sleep':'Sonno','snow':'Neve','sun':'Sole','walk':'Passeggiata'}
     sidebar-filter3-text: Mostra Esempi
+subreddit:
+  English:
+    name: "Subreddit"
+    sidebar-title: "## Options"
+    title: "Subreddit"
+    sidebar-filter1-text: Animal
+    sidebar-filter1-options: {"all":"All","cats":"Cats","dogs":"Dogs"}
+    sidebar-filter3-texta: X-axis
+    sidebar-filter3-textb: Y-axis
+    sidebar-filter3-options: {"target":"Popularity","size":"Size","activity":"Activity"}
+  Italiano:
+    name: "Subreddit"
+    sidebar-title: "## Opzioni"
+    title: "Subreddit"
+    sidebar-filter1-text: Animale
+    sidebar-filter1-options: {"all":"Tutti Due","cats":"Gatti","dogs":"Cani"}
+    sidebar-filter3-texta: X-axis
+    sidebar-filter3-textb: Y-axis
+    sidebar-filter3-options: {"target":"Popolarità","size":"Taglia","activity":"Attività"}
+
+
+
+
 
 
 

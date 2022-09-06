@@ -1,6 +1,6 @@
 import yaml
 import streamlit as st
-from pages import Home,Dataset,Caption
+from pages import Home,Dataset,Caption,Subreddit
 from util import translate, flip_page
 
 
@@ -13,6 +13,8 @@ if "lang" not in st.session_state:
 if "filter1" not in st.session_state:
     st.session_state["filter1"] = "all"
     st.session_state["filter2"] = "attributes"
+    st.session_state["filter3a"] = "size"
+    st.session_state["filter3b"] = "target"
 
 
 
@@ -39,12 +41,13 @@ pages = {
     "homepage": Home,
     "dataset": Dataset,
     "caption": Caption,
+    "subreddit": Subreddit
 }
 
 
 
 
-@st.cache(hash_funcs={dict: lambda _: None})
+# @st.cache(hash_funcs={dict: lambda _: None})
 def grab_page(selected_page,translation):
     return {"f1":selected_page(translation)}
 
