@@ -26,8 +26,9 @@ class Page:
         translation = self.content[lang]
 
         st.markdown("<h1 style='text-align: center;'>" + translation["title"] + "</h1>", unsafe_allow_html=True)
-        st.sidebar.markdown(translation["sidebar-title"])
         st.write("-"*50)
+
+        st.sidebar.markdown(translation["sidebar-title"])
 
 
         self.render_content(translation,lang)
@@ -46,18 +47,123 @@ class Home(Page):
         super().__init__(content["homepage"]) 
 
 
+    def render_frame(self,lang):
+
+        translation = self.content[lang]
+
+        st.markdown("<h1 style='text-align: center;'>" + translation["title"] + "</h1>", unsafe_allow_html=True)
+        st.markdown("<small><h1 style='text-align: center;'>" + "Robert Ikerd" + "</h1><small>", unsafe_allow_html=True)
+        st.write("-"*50)
+
+        st.sidebar.markdown(translation["sidebar-title"])
+
+
+
+
+
 class Dataset(Page):
 
     def __init__(self,content):
         super().__init__(content["dataset"]) 
 
 
+    def render_content(self,translation,lang):
+
+
+
+        st1,st2 = st.columns(2)
+        st1.markdown(f"""
+        ### {translation["section1-title"]}
+        
+        {translation["section1-text"]}
+        """)
+
+        st2.image("appdata/dogpictures.png")
+        st2.image("appdata/catpictures.png")
+
+
+        st.write("-"*50)
+        st1,st2 = st.columns(2)
+
+
+        st1.image(f'appdata/target_hist_{lang.lower()}.png')
+        st1.image(f'appdata/target_hist_logged_{lang.lower()}.png')
+        st2.markdown(f"""
+        ### {translation["section2-title"]}
+        
+        {translation["section2-text"]}
+        
+        """)
+
+
+
+        st.write("-"*50)
+
+
+
+
+
 
 class TimeSeries(Page):
 
     def __init__(self,content):
-        super().__init__(content["time"]) 
+        super().__init__(content["timeseries"]) 
 
+
+    def render_content(self,translation,lang):
+
+
+
+        index1 = list(translation["sidebar-filter1-options"].keys()).index(st.session_state["filter1"])
+        st.session_state["filter1"] = st.sidebar.selectbox(translation["sidebar-filter1-text"], translation["sidebar-filter1-options"].keys(), format_func=lambda x:translation["sidebar-filter1-options"][x],on_change=apply_filter1,key="new_filter1",index=index1) 
+
+
+
+        st1,st2 = st.columns(2)
+
+
+        st1.image(f'appdata/posts_over_time_{st.session_state["filter1"]}.png')
+        st1.image(f'appdata/popularity_over_time_{st.session_state["filter1"]}.png')
+
+
+        st2.markdown(f"""
+        ### {translation["section1-title"]}
+        
+        {translation["section1-text"]}
+        """)
+
+
+
+        st.write("-"*50)
+        st1,st2 = st.columns(2)
+
+        st1.markdown(f"""
+        ### {translation["section2-title"]}
+        
+        {translation["section2-text"]}
+        """)
+
+        st2.image(f'appdata/posts_hourly_{st.session_state["filter1"]}.png')
+        st2.image(f'appdata/popularity_hourly_{st.session_state["filter1"]}.png')
+
+
+ 
+        st.write("-"*50)
+        st1,st2 = st.columns(2)
+
+
+        st1.image(f'appdata/competition_{st.session_state["filter1"]}.png')
+
+        st2.markdown(f"""
+        ### {translation["section3-title"]}
+        
+        {translation["section3-text"]}
+        """)
+
+
+
+
+        st.write("-"*50)
 
 
 
@@ -72,8 +178,8 @@ class Caption(Page):
 
         self.df = pd.read_csv("appdata/cap.csv")
 
-        self.fig = px.scatter(self.df.rename(columns=str.title),x="Dim 1",y="Dim 2", custom_data=["Subject","Title","Upvotes"],color="Subject", labels={'color': 'Subject'})
-        self.fig.update_traces(hovertemplate="<br>".join(["Subject: %{customdata[0]}","Title: %{customdata[1]}","Upvotes %{customdata[2]}"]))
+        # self.fig = px.scatter(self.df.rename(columns=str.title),x="Dim 1",y="Dim 2", custom_data=["Subject","Title","Upvotes"],color="Subject", labels={'color': 'Subject'})
+        # self.fig.update_traces(hovertemplate="<br>".join(["Subject: %{customdata[0]}","Title: %{customdata[1]}","Upvotes %{customdata[2]}"]))
         
 
 
@@ -149,18 +255,18 @@ class Caption(Page):
 
 
         st.write("-"*50)
-        st1,st2 = st.columns([1,3])
+        # st1,st2 = st.columns([1,3])
 
-        st1.markdown(f"""
-        ### {translation["section4-title"]}
+        # st1.markdown(f"""
+        # ### {translation["section4-title"]}
 
-        {translation["section4-text"]}
+        # {translation["section4-text"]}
 
-        """)
+        # """)
 
-        self.fig.update_layout(title_text=translation["section4-plot-title"], title_x=0.5)
+        # self.fig.update_layout(title_text=translation["section4-plot-title"], title_x=0.5)
 
-        st2.plotly_chart(self.fig,use_container_width=True)
+        # st2.plotly_chart(self.fig,use_container_width=True)
 
 
 
@@ -195,14 +301,21 @@ class Subreddit(Page):
 
         st.session_state["filter3b"] = st.sidebar.selectbox(translation["sidebar-filter3-textb"], yoptions.keys(), format_func=lambda x:yoptions[x],on_change=apply_filter3b,key="new_filter3b",index=index3b)
 
+ 
         if st.session_state["filter1"]=="all":
             self.fig = px.scatter(data_frame=self.df.sort_values("category"),x=st.session_state["filter3a"],y=st.session_state["filter3b"],color="category",hover_name="subreddit",color_discrete_sequence=["red","blue"],labels=translation["sidebar-filter3-options"])
         else:
             self.fig = px.scatter(data_frame=self.df[self.df.category==st.session_state["filter1"]],x=st.session_state["filter3a"],y=st.session_state["filter3b"],hover_name="subreddit",color="category",color_discrete_sequence=["red" if st.session_state["filter1"]=="cats" else "blue"],labels=translation["sidebar-filter3-options"])
 
         self.fig.update_layout(legend_title="Category",legend_title_font_size=20)
-        self.fig.update_xaxes(range=[self.df[st.session_state["filter3a"]].min(),self.df[st.session_state["filter3a"]].max()])
-        self.fig.update_yaxes(range=[self.df[st.session_state["filter3b"]].min(),self.df[st.session_state["filter3b"]].max()])
+        self.fig.update_xaxes(range=[self.df[st.session_state["filter3a"]].min()*0.9,self.df[st.session_state["filter3a"]].max()*1.2])
+        self.fig.update_yaxes(range=[self.df[st.session_state["filter3b"]].min()*0.9,self.df[st.session_state["filter3b"]].max()*1.2])
 
-        
+
         st.plotly_chart(self.fig,use_container_width=True)
+
+
+
+
+
+        st.write("-"*50)

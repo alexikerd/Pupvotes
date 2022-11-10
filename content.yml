@@ -7,30 +7,54 @@ translate:
 homepage:
   English:
     name: "Homepage"
-    sidebar-title: "## Homepage \U0001F431"
+    sidebar-title: "## Homepage"
     title: "Pupvotes \U0001F436"
   Italiano: 
     name: "Pagina Iniziale"
-    sidebar-title: "## Pagina Iniziale \U0001F431"
-    title: "Pupvotes \U0001F436"
+    sidebar-title: "## Pagina Iniziale"
+    title: "Set di Gatti \U0001F431"
 dataset:
   English:
     name: "Dataset"
-    sidebar-title: "## Options"
+    sidebar-title: "## Dataset \U0001F431"
     title: "Dataset"
+    section1-title: "Reddit Posts"
+    section2-title: "Popularity"
+    section1-text: "I scheduled a scraper to scrape posts from a variety of dog and cat pictures from reddit.  I scraped all posts from November 6th, 2021 to July 4th, 2022.  Because most of the upvotes occur in the first few days of posting, every datapoing was scraped when it was 1-2 weeks old.  Further analysis proved this to be correct as the age of the post (7-14 days) had 0 correlation with the number of upvotes.  Additionally, I also scraped the number of subscribers for each subreddit (in case any subreddit experience massive growth)."
+    section2-text: "For this project, I was not as interested in predicting the exact number of upvotes so much as understanding the qualities that made a post more upvoted than others.  As we can see, the number of upvotes is highly skewed.  This makes sense as a lot of reddit users sort by hot, so any post that gains enough traction early to be moved to hot will gain much more upvotes than one that does not.  To account for this, I've logged the number of upvotes to create a new feature known as popularity."
   Italiano:
       name: "Set di Dati"
-      sidebar-title: "## Opzioni"
+      sidebar-title: "## Set di Dati \U0001F431"
       title: "Set di Dati"
-time:
+      section1-title: "Posti di Reddit"
+      section2-title: "Popolarità"
+      section1-text: "Ho scritto un scraper per scaricare post dal reddit.  Trovavo le foto dei cani e gatti dal 6 Novembre al 4 Luglio.  Un post riceve la maggioranza dei upvotes nei primi giorni, quindi lo scraper scaricava i post da 1 e 2 settimane nel passato.  Ho fatto analisi dopo di finire e visto che è vero.  Finalmente, non sapevo quanto un subreddit crescerebbe ed io ho scritto un'altro scraper a scaricare il numero di subscribers ogni settimana."
+      section2-text: "Per questo progetto, non mi interesa predire il numero esatto dei upvotes.  È più importante sapere le qualità che fa un post ad avere più upvotes che gli altri.  I numeri di upvotes sono molto distorti.  Tanti redditors solo vogliono vedere i posti 'hot', quindi se un post non ottiene abbastanza popolarità al inizio, perde l'opportunità di avere l'udienza generale.  Quindi, ho preso il logaritmo dei numeri per analisare la popolarità dei post."
+timeseries:
   English:
     name: "Time Series"
-    sidebar-title: "## Homepage \U0001F431"
+    sidebar-title: "## Options"
     title: "Time Series"
+    section1-title: Trends over Time
+    section2-title: Time of the Day
+    section3-title: Competition
+    section1-text: The number of posts remains fairly consistent (you can see the few days where my script failed to run) with one exception.  Christmas experiences a massive spike in dog posts without a corresponding spike with cats.  With median popularity, it seems that cats have only recently begun to outperform dogs.
+    section2-text: Unsurprisingly, the number of posts corresponds to the hours where most people are awake (8am-10pm).  The number of upvotes a post gets is highly reliant on user activity.  It seems that the best time to post is in the morning, right before the majority of other posters are posting.  This is the best opportunity to catch the maximum amount of activity while minimizing competition.
+    section3-text: I've defined competition as the total number of posts within the same category (dog or cat) that occured within an hour of any given post.  Clearly the less competition a post has, the more upvotes it will get.
+    sidebar-filter1-text: Animal
+    sidebar-filter1-options: {"all":"All","cats":"Cats","dogs":"Dogs"}
   Italiano: 
     name: "Serie Temporali"
-    sidebar-title: "## Pagina Iniziale \U0001F431"
+    sidebar-title: "## Opzioni"
     title: "Serie Temporali"
+    section1-title: Tendenza nel Tempo
+    section2-title: Ora del Giorno
+    section3-title: Competizione
+    section1-text: Il numero dei post non cambia molto (puoi vedere le settimane che il mio scraper non è funzionato).  Per natale, il numero dei post di cani si è cresciuto ma i gatti no.  A metà del set dei dati, i gatti hanno iniziato ad essere più populari che i cani.
+    section2-text: Analisisi dei Soggetti
+    section3-text: Nuvola di Parole per Soggetto  
+    sidebar-filter1-text: Animale
+    sidebar-filter1-options: {"all":"Tutti Due","cats":"Gatti","dogs":"Cani"}
 caption:
   English:
     name: "Caption"
@@ -71,8 +95,8 @@ caption:
     section2-title: Analisisi dei Soggetti
     section3-title: Nuvola di Parole per Soggetto
     section4-title: Vettore di Didascalia
-    section1-text: Niente
-    section2-text: Niente
+    section1-text: Sfortunatamente, i redditors non usano tante parole quando fanno i post.  Ovviamente, la parte principale di un post è la foto.  Il testo solo prende contesto al post.  Per i cani, sembra che contesto è più importante.  Un post di un gatto non deve avere molto testo, infatti è peggiore avere troppo.  ~10 parole è migliore per i cani.
+    section2-text: Abbiamo già visto che non ci sono tante parole.  Questo è un problema difficile perché i metodi matematici per capire testo ha bisogno di abbastanza parole.  Per esempio, un post per natale può dice 'Merry Christmas' o 'Santa Claus' però mai tutti due.  Quindi gli algoritmi non imparano questa connessione semantica è non scopriamo tendenze nel testo.  Per trovare intuizioni, dovevo leggere abbastanza post e scrivere logico per organizzare il testo.  I miei 12 soggetti capturano 30% dei post.
     section3-text1: Descrizione
     section3-text2: Esempi
     section3-description-attributes: Sta parlando dei parti del corpo.
@@ -103,7 +127,7 @@ subreddit:
     sidebar-filter1-options: {"all":"All","cats":"Cats","dogs":"Dogs"}
     sidebar-filter3-texta: X-axis
     sidebar-filter3-textb: Y-axis
-    sidebar-filter3-options: {"target":"Popularity","size":"Size","activity":"Activity"}
+    sidebar-filter3-options: {"target":"Popularity","size":"Size","activity":"Activity","growth":"Growth"}
   Italiano:
     name: "Subreddit"
     sidebar-title: "## Opzioni"
@@ -112,7 +136,7 @@ subreddit:
     sidebar-filter1-options: {"all":"Tutti Due","cats":"Gatti","dogs":"Cani"}
     sidebar-filter3-texta: X-axis
     sidebar-filter3-textb: Y-axis
-    sidebar-filter3-options: {"target":"Popolarità","size":"Taglia","activity":"Attività"}
+    sidebar-filter3-options: {"target":"Popolarità","size":"Taglia","activity":"Attività","growth":"Crescita"}
 
 
 

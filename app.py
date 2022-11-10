@@ -1,6 +1,6 @@
 import yaml
 import streamlit as st
-from pages import Home,Dataset,Caption,Subreddit
+from pages import Home,Dataset,Caption,Subreddit,TimeSeries
 from util import translate, flip_page
 
 
@@ -41,7 +41,8 @@ pages = {
     "homepage": Home,
     "dataset": Dataset,
     "caption": Caption,
-    "subreddit": Subreddit
+    "subreddit": Subreddit,
+    "timeseries": TimeSeries
 }
 
 
