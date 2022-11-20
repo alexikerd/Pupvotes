@@ -7,29 +7,29 @@ translate:
 homepage:
   English:
     name: "Homepage"
-    sidebar-title: "## Homepage"
     title: "Pupvotes \U0001F436"
   Italiano: 
     name: "Pagina Iniziale"
-    sidebar-title: "## Pagina Iniziale"
     title: "Set di Gatti \U0001F431"
 dataset:
   English:
     name: "Dataset"
-    sidebar-title: "## Dataset \U0001F431"
     title: "Dataset"
     section1-title: "Reddit Posts"
-    section2-title: "Popularity"
+    section2-title: "Goal"
+    section3-title: "Popularity"
     section1-text: "I scheduled a scraper to scrape posts from a variety of dog and cat pictures from reddit.  I scraped all posts from November 6th, 2021 to July 4th, 2022.  Because most of the upvotes occur in the first few days of posting, every datapoing was scraped when it was 1-2 weeks old.  Further analysis proved this to be correct as the age of the post (7-14 days) had 0 correlation with the number of upvotes.  Additionally, I also scraped the number of subscribers for each subreddit (in case any subreddit experience massive growth)."
-    section2-text: "For this project, I was not as interested in predicting the exact number of upvotes so much as understanding the qualities that made a post more upvoted than others.  As we can see, the number of upvotes is highly skewed.  This makes sense as a lot of reddit users sort by hot, so any post that gains enough traction early to be moved to hot will gain much more upvotes than one that does not.  To account for this, I've logged the number of upvotes to create a new feature known as popularity."
+    section2-text: "I wanted to train a model to understand what made certain photos of dogs/cats more appealing to people.  Initially, I worked on the 'pawpularity' challenge from kaggle but found the dataset unreliable.  Disappointed, I set out to create my own equivalent dataset instead of giving up.  So I scraped data from reddit with post quality approximated by the number of upvotes"
+    section3-text: "For this project, I was not as interested in predicting the exact number of upvotes so much as understanding the qualities that made a post more upvoted than others.  As we can see, the number of upvotes is highly skewed.  This makes sense as a lot of reddit users sort by hot, so any post that gains enough traction early to be moved to hot will gain much more upvotes than one that does not.  To account for this, I've logged the number of upvotes to create a new feature known as popularity."
   Italiano:
       name: "Set di Dati"
-      sidebar-title: "## Set di Dati \U0001F431"
       title: "Set di Dati"
       section1-title: "Posti di Reddit"
-      section2-title: "Popolarità"
+      section2-title: "Scopo"
+      section3-title: "Popolarità"
       section1-text: "Ho scritto un scraper per scaricare post dal reddit.  Trovavo le foto dei cani e gatti dal 6 Novembre al 4 Luglio.  Un post riceve la maggioranza dei upvotes nei primi giorni, quindi lo scraper scaricava i post da 1 e 2 settimane nel passato.  Ho fatto analisi dopo di finire e visto che è vero.  Finalmente, non sapevo quanto un subreddit crescerebbe ed io ho scritto un'altro scraper a scaricare il numero di subscribers ogni settimana."
-      section2-text: "Per questo progetto, non mi interesa predire il numero esatto dei upvotes.  È più importante sapere le qualità che fa un post ad avere più upvotes che gli altri.  I numeri di upvotes sono molto distorti.  Tanti redditors solo vogliono vedere i posti 'hot', quindi se un post non ottiene abbastanza popolarità al inizio, perde l'opportunità di avere l'udienza generale.  Quindi, ho preso il logaritmo dei numeri per analisare la popolarità dei post."
+      section2-text: "Volevo insegnare un modelo per capire la ragione che qualcune foto sono più popolari che gli altri.  Ho iniziato questo progetto con il 'pawpularity' set di dati ma ero deluso con la sua qualità.  Quindi, ho deciso a fare il mio propio set di dati.  Ho scelto post di reddit con i upvotes rappresentano la popolarità."
+      section3-text: "Per questo progetto, non mi interesa predire il numero esatto dei upvotes.  È più importante sapere le qualità che fa un post ad avere più upvotes che gli altri.  I numeri di upvotes sono molto distorti.  Tanti redditors solo vogliono vedere i posti 'hot', quindi se un post non ottiene abbastanza popolarità al inizio, perde l'opportunità di avere l'udienza generale.  Quindi, ho preso il logaritmo dei numeri per analisare la popolarità dei post."
 timeseries:
   English:
     name: "Time Series"

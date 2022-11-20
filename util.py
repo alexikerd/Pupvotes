@@ -148,8 +148,8 @@ def load_dataset():
     df["subject"] = df.title.apply(label)
     df["subscriber_logged"] = np.log(df.subscribers)
 
-    # df["target"] -= df.target.mean()
-    # df["target"] /= df.target.std() 
+    df["target"] -= df.target.mean()
+    df["target"] /= df.target.std() 
 
     
     return df

@@ -28,7 +28,8 @@ class Page:
         st.markdown("<h1 style='text-align: center;'>" + translation["title"] + "</h1>", unsafe_allow_html=True)
         st.write("-"*50)
 
-        st.sidebar.markdown(translation["sidebar-title"])
+        if "sidebar-title" in translation:
+            st.sidebar.markdown(translation["sidebar-title"])
 
 
         self.render_content(translation,lang)
@@ -54,8 +55,6 @@ class Home(Page):
         st.markdown("<h1 style='text-align: center;'>" + translation["title"] + "</h1>", unsafe_allow_html=True)
         st.markdown("<small><h1 style='text-align: center;'>" + "Robert Ikerd" + "</h1><small>", unsafe_allow_html=True)
         st.write("-"*50)
-
-        st.sidebar.markdown(translation["sidebar-title"])
 
 
 
@@ -85,13 +84,30 @@ class Dataset(Page):
         st.write("-"*50)
         st1,st2 = st.columns(2)
 
+        for _ in range(3):
+            st1.write("")
 
-        st1.image(f'appdata/target_hist_{lang.lower()}.png')
-        st1.image(f'appdata/target_hist_logged_{lang.lower()}.png')
+        st1.image("appdata/pawpularity.png")
+
         st2.markdown(f"""
         ### {translation["section2-title"]}
         
         {translation["section2-text"]}
+        
+        """)       
+
+
+
+        st.write("-"*50)
+        st1,st2 = st.columns(2)
+
+
+        st2.image(f'appdata/target_hist_{lang.lower()}.png')
+        st2.image(f'appdata/target_hist_logged_{lang.lower()}.png')
+        st1.markdown(f"""
+        ### {translation["section3-title"]}
+        
+        {translation["section3-text"]}
         
         """)
 
